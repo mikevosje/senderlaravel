@@ -17,28 +17,28 @@ class DHLService
         $parcel = new Parcel([
             'reference' => 'your own reference for the parcel (optional)',
             'recipient' => [
-                'first_name'    => 'John',
-                'last_name'     => 'Doe',
-                'street'        => 'Poststraat',
-                'number'        => '1',
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'street' => 'Poststraat',
+                'number' => '1',
                 'number_suffix' => 'A',
-                'postal_code'   => '1234AA',
-                'city'          => 'Amsterdam',
-                'cc'            => 'NL',
+                'postal_code' => '1234AA',
+                'city' => 'Amsterdam',
+                'cc' => 'NL',
             ],
-            'sender'    => [
+            'sender' => [
                 'company_name' => 'Your Company Name',
-                'street'       => 'Pakketstraat',
-                'number'       => '99',
-                'postal_code'  => '9999AA',
-                'city'         => 'Amsterdam',
-                'cc'           => 'NL',
+                'street' => 'Pakketstraat',
+                'number' => '99',
+                'postal_code' => '9999AA',
+                'city' => 'Amsterdam',
+                'cc' => 'NL',
             ],
             // Optional. This will be set as the default.
-            'pieces'    => [
+            'pieces' => [
                 [
                     'parcel_type' => \Mvdnbrk\DhlParcel\Resources\Piece::PARCEL_TYPE_SMALL,
-                    'quantity'    => 1,
+                    'quantity' => 1,
                 ],
             ],
         ]);
@@ -46,12 +46,12 @@ class DHLService
         $shipment = $dhlparcel->shipments->create($parcel);
 
         $shipment->id;
-// For shipments with multiple pieces:
+        // For shipments with multiple pieces:
         $shipment->pieces->each(function ($item) {
             $item->label_id;
             $item->barcode;
         });
-// For a shipment with one single piece:
+        // For a shipment with one single piece:
         $shipment->label_id;
         $shipment->barcode;
     }

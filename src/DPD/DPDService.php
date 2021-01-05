@@ -13,33 +13,33 @@ class DPDService
     {
         $customer = $data->get('customer');
         $receiver = $data->get('receiver');
-        $sender   = $data->get('sender');
+        $sender = $data->get('sender');
 
         try {
             $authorisation = $this->authorisation($customer);
-            $shipment      = new DPDShipment($authorisation);
+            $shipment = new DPDShipment($authorisation);
             $shipment->setGeneralShipmentData([
-                'product'                     => 'CL',
-                'mpsCustomerReferenceNumber1' => 'Test shipment'
+                'product' => 'CL',
+                'mpsCustomerReferenceNumber1' => 'Test shipment',
             ]);
             $shipment->setTrackingLanguage('nl_NL');
             $shipment->setReceiver($this->returnReceiver($data->get('receiver')));
             $shipment->setSender($this->returnSender($data->get('sender')));
             $shipment->setPrintOptions([
                 'printerLanguage' => 'PDF',
-                'paperFormat'     => 'A6',
+                'paperFormat' => 'A6',
             ]);
 
             $shipment->addParcel([
                 'weight' => 4000, // In gram, always 4 kilograms, otherwise bills after delivery
                 'height' => 10, // In centimeters
-                'width'  => 10,
-                'length' => 10
+                'width' => 10,
+                'length' => 10,
             ]);
 
             $shipment->submit();
             $response = $shipment->getParcelResponses();
-            $barcode  = $response[0]['airWayBill'];
+            $barcode = $response[0]['airWayBill'];
             $this->uploadLabel($shipment->getLabels(), $barcode);
 
             $sending = (new SendingController())->makeSending($customer->id, 'dpd', $barcode, $receiver, $sender);
@@ -48,13 +48,12 @@ class DPDService
             }
 
             return [
-                'labelurl'         => route('label', ['uuid' => $sending->uuid]),
-                'barcode'          => $barcode,
-                'id'               => (string)$sending->uuid,
-                'carrier'          => 'dpd',
+                'labelurl' => route('label', ['uuid' => $sending->uuid]),
+                'barcode' => $barcode,
+                'id' => (string)$sending->uuid,
+                'carrier' => 'dpd',
                 'trackandtraceurl' => route('trackandtrace', ['uuid' => $sending->uuid]),
             ];
-
         } catch (Exception $e) {
             die($e->getMessage());
         }
@@ -65,6 +64,7 @@ class DPDService
         if (! $customer->service) {
             die('No DPD service connected for this environment or user');
         }
+
         try {
 //            return new DPDAuthorisation([
 //                'staging'         => false,
@@ -74,11 +74,11 @@ class DPDService
 //                'customerNumber'  => '05220000000203470'
 //            ]);
             return new DPDAuthorisation([
-                'staging'         => false,
-                'delisId'         => $customer->service->credentials->delisId,
-                'password'        => $customer->service->credentials->password,
+                'staging' => false,
+                'delisId' => $customer->service->credentials->delisId,
+                'password' => $customer->service->credentials->password,
                 'messageLanguage' => 'nl_NL',
-                'customerNumber'  => $customer->service->credentials->customerNumber
+                'customerNumber' => $customer->service->credentials->customerNumber,
             ]);
         } catch (Exception $e) {
             die($e->getMessage());
@@ -88,27 +88,27 @@ class DPDService
     public function returnSender($data)
     {
         return [
-            'name1'   => $data->name,
-            'street'  => $data->street,
+            'name1' => $data->name,
+            'street' => $data->street,
             'houseNo' => $data->housenumber,
             'country' => $data->country,
             'zipCode' => str_replace(' ', '', $data->zipcode),
-            'city'    => $data->city,
-            'email'   => $data->email,
-            'phone'   => $data->phone
+            'city' => $data->city,
+            'email' => $data->email,
+            'phone' => $data->phone,
         ];
     }
 
     public function returnReceiver($data)
     {
         return [
-            'name1'   => $data->name,
-            'street'  => $data->street,
+            'name1' => $data->name,
+            'street' => $data->street,
             'country' => $data->country,
             'zipCode' => str_replace(' ', '', $data->zipcode),
-            'city'    => $data->city,
-            'email'   => $data->email,
-            'phone'   => $data->phone,
+            'city' => $data->city,
+            'email' => $data->email,
+            'phone' => $data->phone,
             'houseNo' => $data->housenumber,
         ];
     }
@@ -121,5 +121,4 @@ class DPDService
             'public'
         );
     }
-
 }

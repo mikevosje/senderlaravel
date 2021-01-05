@@ -2,7 +2,6 @@
 
 namespace Wappz\Sender;
 
-
 class Contact
 {
     public $full_name = '';

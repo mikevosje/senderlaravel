@@ -16,28 +16,29 @@ class POSTNLService
     {
         $customer = $data->get('customer');
         $receiver = $data->get('receiver');
-        $sender   = $data->get('sender');
-        $apikey   = $customer->service->credentials->apikey;
-        $sandbox  = true;
+        $sender = $data->get('sender');
+        $apikey = $customer->service->credentials->apikey;
+        $sandbox = true;
+
         try {
-            $postnl      = new PostNL($this->createCustomer($customer, $sender), $apikey, $sandbox);
-            $barcode     = $postnl->generateBarcodeByCountryCode('NL');
+            $postnl = new PostNL($this->createCustomer($customer, $sender), $apikey, $sandbox);
+            $barcode = $postnl->generateBarcodeByCountryCode('NL');
             $countrycode = 'NL';
-            $postalcode  = '5528AW';
-            $shipment    = Shipment::create([
-                'Addresses'           => [
+            $postalcode = '5528AW';
+            $shipment = Shipment::create([
+                'Addresses' => [
                     Address::create([
                         'AddressType' => '01',
-                        'City'        => $receiver->city,
+                        'City' => $receiver->city,
                         'Countrycode' => $receiver->country,
-                        'HouseNr'     => $receiver->housenumber,
-                        'Name'        => $receiver->name,
-                        'Street'      => $receiver->street,
-                        'Zipcode'     => $receiver->zipcode,
+                        'HouseNr' => $receiver->housenumber,
+                        'Name' => $receiver->name,
+                        'Street' => $receiver->street,
+                        'Zipcode' => $receiver->zipcode,
                     ]),
                 ],
-                'Barcode'             => $barcode,
-                'Dimension'           => new Dimension('2000'),
+                'Barcode' => $barcode,
+                'Dimension' => new Dimension('2000'),
                 'ProductCodeDelivery' => '3085',
             ]);
             $label = $postnl->generateLabel($shipment, 'GraphicFile|PDF', true);
@@ -46,7 +47,8 @@ class POSTNLService
             Storage::disk('s3')->put(
                 'postnl/' . $barcode . '.pdf',
                 base64_decode($label->getResponseShipments()[0]->getLabels()[0]->getContent()),
-                'public');
+                'public'
+            );
 
             $sending = (new SendingController())->makeSending($customer->id, 'postnl', $barcode, $receiver, $sender);
             if (! $sending) {
@@ -55,10 +57,10 @@ class POSTNLService
 
             //get
             return [
-                'labelurl'         => route('label', ['uuid' => $sending->uuid]),
-                'barcode'          => $barcode,
-                'id'               => (string) $sending->uuid,
-                'carrier'          => 'postnl',
+                'labelurl' => route('label', ['uuid' => $sending->uuid]),
+                'barcode' => $barcode,
+                'id' => (string) $sending->uuid,
+                'carrier' => 'postnl',
                 'trackandtraceurl' => route('trackandtrace', ['uuid' => $sending->uuid]),
             ];
         } catch (\Exception $e) {
@@ -71,20 +73,20 @@ class POSTNLService
     {
         return Customer::create([
             'CollectionLocation' => $customer->service->credentials->collectionLocation,
-            'CustomerCode'       => $customer->service->credentials->customerCode,
-            'CustomerNumber'     => $customer->service->credentials->customerNumber,
-            'ContactPerson'      => $sender->name,
-            'Address'            => Address::create([
+            'CustomerCode' => $customer->service->credentials->customerCode,
+            'CustomerNumber' => $customer->service->credentials->customerNumber,
+            'ContactPerson' => $sender->name,
+            'Address' => Address::create([
                 'AddressType' => '02',
-                'City'        => $sender->city,
+                'City' => $sender->city,
                 'CompanyName' => $sender->name,
                 'Countrycode' => $sender->country,
-                'HouseNr'     => $sender->housenumber,
-                'Street'      => $sender->street,
-                'Zipcode'     => str_replace(' ', '', $sender->zipcode),
+                'HouseNr' => $sender->housenumber,
+                'Street' => $sender->street,
+                'Zipcode' => str_replace(' ', '', $sender->zipcode),
             ]),
-            'Email'              => $sender->email,
-            'Name'               => $sender->name,
+            'Email' => $sender->email,
+            'Name' => $sender->name,
         ]);
     }
 }

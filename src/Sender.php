@@ -38,13 +38,13 @@ class Sender
     public function send()
     {
         switch ($this->platform->partner) {
-            case 'dpd' :
+            case 'dpd':
                 return 'dpd';
-            case 'gls' :
+            case 'gls':
                 return (new GLSService())->sendwithgls($this->order, $this->contact, $this->platform);
-            case 'postnl' :
+            case 'postnl':
                 return 'postnl';
-            case 'dhl' :
+            case 'dhl':
                 return 'dhl';
         }
 
