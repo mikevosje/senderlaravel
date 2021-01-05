@@ -1,23 +1,28 @@
 {
-    "name": ":vendor_name/:package_name",
-    "description": ":package_description",
+    "name": "wappz/sender-laravel",
+    "description": "Package for sending packages with sending companies",
     "keywords": [
-        ":vendor_name",
-        ":package_name"
+        "wappz",
+        "sender-laravel"
     ],
-    "homepage": "https://github.com/:vendor_name/:package_name",
+    "homepage": "https://github.com/wappz/sender-laravel",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": ":author_email",
+            "name": "Wappz",
+            "email": "info@wappz.nl",
             "homepage": "https://spatie.be",
             "role": "Developer"
         }
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "illuminate/contracts": "^8.0"
+        "firstred/postnl-api-php": "^1.1",
+        "mcs/dpd": "^0.0.2",
+        "mvdnbrk/dhlparcel-php-api": "^1.4",
+        "pear/http_request2": "^2.4",
+        "petschko/dhl-php-sdk": "^0.5.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
@@ -25,13 +30,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\Skeleton\\": "src",
-            "Spatie\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Wappz\\Sender\\": "src",
+            "Wappz\\Sender\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\Skeleton\\Tests\\": "tests"
+            "Wappz\\Sender\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -45,10 +50,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Spatie\\Skeleton\\SkeletonServiceProvider"
+                "Wappz\\Sender\\SenderServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "Spatie\\Skeleton\\SkeletonFacade"
+                "Sender": "Wappz\\Sender\\SenderFacade"
             }
         }
     },

@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\Skeleton\Tests;
+namespace Wappz\Sender\Tests;
 
 class ExampleTest extends TestCase
 {

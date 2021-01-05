@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\Skeleton\Commands;
+namespace Wappz\Sender\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class SenderCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'sender-laravel';
 
     public $description = 'My command';
 
