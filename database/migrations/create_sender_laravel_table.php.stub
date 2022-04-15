@@ -8,11 +8,12 @@ class CreateSenderLaravelTable extends Migration
 {
     public function up()
     {
-        Schema::create('sender', function (Blueprint $table) {
+        Schema::create('sendings', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid('uuid')->unique();
-            $table->string('carrier');
+            $table->string('carrier')->index();
             $table->string('barcode')->index();
+            $table->string('packagenumber')->index();
+            $table->string('trackinglink');
             $table->string('zipcode')->index();
             $table->timestamps();
         });

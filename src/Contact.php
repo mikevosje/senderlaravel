@@ -1,6 +1,6 @@
 <?php
 
-namespace Wappz\Sender;
+namespace App\Packages\Sender;
 
 class Contact
 {

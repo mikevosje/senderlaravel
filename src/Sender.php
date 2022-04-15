@@ -1,8 +1,10 @@
 <?php
 
-namespace Wappz\Sender;
+namespace App\Packages\Sender;
 
-use Wappz\Sender\GLS\GLSService;
+use Illuminate\Support\Collection;
+use App\Packages\Sender\BOL\BolService;
+use App\Packages\Sender\GLS\GLSService;
 
 class Sender
 {
@@ -21,7 +23,7 @@ class Sender
         return $this;
     }
 
-    public function setOrder(array $order): Sender
+    public function setOrder(Order $order): Sender
     {
         $this->order = new Order($order);
 
@@ -35,10 +37,12 @@ class Sender
         return $this;
     }
 
-    public function send()
+    public function send(): Collection
     {
         switch ($this->platform->partner) {
-            case 'dpd':
+            case 'bol' :
+                return (new BolService($this->order, $this->platform))->sendwithbol();
+            case 'dpd' :
                 return 'dpd';
             case 'gls':
                 return (new GLSService())->sendwithgls($this->order, $this->contact, $this->platform);

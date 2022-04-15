@@ -1,10 +1,10 @@
 <?php
 
-namespace Wappz\Sender\Tests;
+namespace App\Packages\Sender\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Wappz\Sender\SenderServiceProvider;
+use App\Packages\Sender\SenderServiceProvider;
 
 class TestCase extends Orchestra
 {

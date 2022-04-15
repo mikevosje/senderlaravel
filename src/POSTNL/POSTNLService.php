@@ -1,6 +1,6 @@
 <?php
 
-namespace Wappz\Sender\POSTNL;
+namespace App\Packages\Sender\POSTNL;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;

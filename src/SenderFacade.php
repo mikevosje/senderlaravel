@@ -1,11 +1,11 @@
 <?php
 
-namespace Wappz\Sender;
+namespace App\Packages\Sender;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Wappz\Sender\Sender
+ * @see \App\Packages\Sender\Sender
  */
 class SenderFacade extends Facade
 {

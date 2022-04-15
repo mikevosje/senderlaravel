@@ -1,10 +1,11 @@
 <?php
 
-namespace Wappz\Sender;
+namespace App\Packages\Sender;
 
 class Order
 {
     public $order_number = '';
+    public $teampartner = '';
 
     public function __construct(array $data)
     {

@@ -1,13 +1,14 @@
 <?php
 
-namespace Wappz\Sender\GLS;
+namespace App\Packages\Sender\GLS;
 
 use Carbon\Carbon;
 use HTTP_Request2;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Wappz\Sender\Contact;
-use Wappz\Sender\Order;
-use Wappz\Sender\Platform;
+use App\Packages\Sender\Contact;
+use App\Packages\Sender\Models\Sending;
+use App\Packages\Sender\Order;
+use App\Packages\Sender\Platform;
 
 class GLSService
 {
@@ -15,8 +16,8 @@ class GLSService
     {
         // This sample uses the Apache HTTP client from HTTP Components (http://hc.apache.org/httpcomponents-client-ga/)
 
-        $request = new Http_Request2('https://api.gls.nl/V1/api/Label/Create?api-version=1.0');
-        $url = $request->getUrl();
+        $request = new Http_Request2('https://api.gls.nl/Test/V1/api/Label/Create?api-version=1.0');
+        $url     = $request->getUrl();
 
         $headers = [
             // Request headers
@@ -35,21 +36,18 @@ class GLSService
         $request->setMethod(HTTP_Request2::METHOD_POST);
 
         $body = [
-            "trackingLinkType" => "U",
-            "labelType" => "pdf",
-            "labelA4StartPosition" => 0,
-            "labelA4MoveXMm" => 0,
-            "labelA4MoveYMm" => 0,
+            "trackingLinkType"  => "U",
+            "labelType"         => "pdf",
             "notificationEmail" => [
-                "sendMail" => true,
-                "senderName" => "Stock and Trade",
+                "sendMail"           => true,
+                "senderName"         => "Stock and Trade",
                 "senderReplyAddress" => "floris@stockandtrade.nl",
                 "senderContactName" => "Floris van den Broek",
                 "senderPhoneNo" => "string",
                 "emailSubject" => "Your order has been shipped!",
             ],
             "returnRoutingData" => true,
-            "addresses" => [
+            "addresses"         => [
                 "deliveryAddress" => [
                     "addresseeType" => "P",
                     "name1" => $contact->full_name,
@@ -64,27 +62,49 @@ class GLSService
                     "email" => $contact->email,
                 ],
             ],
-            "shippingDate" => Carbon::now()->format('Y-m-d'),
-            "reference" => $order->order_number,
-            "units" => [
+            "shippingDate"      => Carbon::now()->format('Y-m-d'),
+            "reference"         => $order->order_number,
+            "units"             => [
                 [
                     "unitId" => "A",
                     "weight" => 5,
-                ],
+                ]
             ],
-            "shiptype" => "P",
-            "username" => $platform->data['email'],
-            "password" => $platform->data['password'],
+            "shiptype"          => "P",
+            "username"          => $platform->data['email'],
+            "password"          => $platform->data['password']
         ];
         // Request body
-        return json_encode($body);
         $request->setBody(json_encode($body));
 
         try {
             $response = $request->send();
-            echo $response->getBody();
+
+            return $this->parseData($response->getBody());
         } catch (HttpException $ex) {
             echo $ex;
         }
+    }
+
+    public function parseData($data)
+    {
+        $newdata  = json_decode($data);
+        $sendings = [];
+        if ($newdata->error === false) {
+            foreach ($newdata->units as $unit) {
+                $sending = Sending::create([
+                    'carrier'       => 'gls',
+                    'barcode'       => $unit->unitNo,
+                    'packagenumber' => $unit->uniqueNo,
+                    'trackinglink'  => $unit->unitTrackingLink,
+                    'zipcode'       => $unit->routingData->zipCode
+                ]);
+                $sending->addMediaFromBase64($unit->label,
+                    'application/pdf')->usingName($unit->uniqueNo)->usingFileName($unit->uniqueNo . '.pdf')->toMediaCollection('gls');
+                $sendings[] = $sending;
+            }
+        }
+
+        return collect($sendings);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Wappz\Sender\DPD;
+namespace App\Packages\Sender\DPD;
 
 use Exception;
 use Illuminate\Support\Facades\Storage;

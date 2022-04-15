@@ -1,6 +1,6 @@
 <?php
 
-namespace Wappz\Sender\Database\Factories;
+namespace App\Packages\Sender\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 

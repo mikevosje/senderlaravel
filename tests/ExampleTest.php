@@ -1,6 +1,6 @@
 <?php
 
-namespace Wappz\Sender\Tests;
+namespace App\Packages\Sender\Tests;
 
 class ExampleTest extends TestCase
 {

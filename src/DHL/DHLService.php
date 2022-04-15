@@ -1,6 +1,6 @@
 <?php
 
-namespace Wappz\Sender\DHL;
+namespace App\Packages\Sender\DHL;
 
 use Mvdnbrk\DhlParcel\Client;
 use Mvdnbrk\DhlParcel\Resources\Parcel;

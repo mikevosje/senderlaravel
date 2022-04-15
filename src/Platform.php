@@ -1,11 +1,12 @@
 <?php
 
-namespace Wappz\Sender;
+namespace App\Packages\Sender;
 
 class Platform
 {
     public $partner = '';
     public $data = '';
+    public $shippingLabelOfferId = null;
 
     public function __construct(array $data)
     {
@@ -23,7 +24,12 @@ class Platform
     public function checkErrors()
     {
         $errors = [];
-        $checks = ['partner', 'data'];
+        $checks = ['partner'];
+        if ($this->partner === 'bol') {
+            $checks[] = 'shippingLabelOfferId';
+        } else {
+            $checks[] = 'data';
+        }
         foreach ($checks as $check) {
             if (! $this->{$check} || $this->{$check} === '') {
                 $errors[$check] = $check . ' cannot be empty';

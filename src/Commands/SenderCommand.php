@@ -1,6 +1,6 @@
 <?php
 
-namespace Wappz\Sender\Commands;
+namespace App\Packages\Sender\Commands;
 
 use Illuminate\Console\Command;
 

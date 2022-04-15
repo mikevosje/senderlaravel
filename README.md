@@ -26,13 +26,13 @@ composer require wappz/sender-laravel
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --provider="Wappz\Sender\SenderServiceProvider" --tag="migrations"
+php artisan vendor:publish --provider="App\Packages\Sender\SenderServiceProvider" --tag="migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 ```bash
-php artisan vendor:publish --provider="Wappz\Sender\SenderServiceProvider" --tag="config"
+php artisan vendor:publish --provider="App\Packages\Sender\SenderServiceProvider" --tag="config"
 ```
 
 This is the contents of the published config file:
